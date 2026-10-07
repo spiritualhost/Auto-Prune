@@ -18,17 +18,22 @@ logging.basicConfig(
 #Index the provided file path recursively.
 def fs_index(directory: str) -> list:
 
+    logging.info("Starting index of directory %s.", directory)
+
     #Check if directory exists
     if not os.path.exists(directory):
         logging.exception("Provided directory does not exist. Exiting.")
         os._exit(1)
 
     #Comprehend a list of all directories under the head
+    #NB - tqdm will count all items considered prior to the filter and won't match the final item count
     folders = [p for p in tqdm(directory.rglob("*")) if p.is_dir()]
 
     print("Current folder structure:")
     for folder in folders:
         print(folder)
+
+    logging.info("Succcessful index -- returning pathlist.")
 
     return folders
 
@@ -44,7 +49,8 @@ def main():
 
     #Index the file system as it currently exists
     directory = Path("testdir\\migration") #Testing
-    fs_index(directory)
+    index = fs_index(directory)
+    print(index)
 
     return 0
 
