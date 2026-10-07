@@ -1,10 +1,14 @@
 import os
 import logging
 from pathlib import Path
+from datetime import datetime
 from tqdm import tqdm
 
 #import tkinter as tk
 #from tkinter import filedialog
+
+#Set global variables
+date_today = datetime.now()
 
 #Logging set up
 logging.basicConfig(
@@ -37,11 +41,34 @@ def fs_index(directory: str) -> list:
 
     return folders
 
+#Check the age of the items at the provided paths against threshold
+def too_old(path: Path, threshold: int) -> bool:
+
+    logging.info("Checking age of %s", path)
+
+    #Get the modification time timestamp
+    timestamp = path.stat().st_mtime
+
+    #Convert timestamp to a datetime object
+    modification_date = datetime.fromtimestamp(timestamp)
+
+    #Get difference between today and the modification time
+    difference = (date_today - modification_date).days
+
+    if difference >= threshold:
+        print(f"Test ~~ Deleting folder {path}")
+        logging.info("Folder older than threshold.")
+        return True
+    else:
+        return False
+
 def main():
     #Log beginning of script runtime
-    logging.info("Began auto-prune.")
+    logging.info("Beginning auto-prune.")
 
     #Check if the config.toml file exists
+    if not os.path.exists("config.toml"):
+        logging.warning("No config file exists. Creating new config file.")
 
     #Check if the config.toml file has a path in it already
     #If not, open filedialog to allow the user to select a path
@@ -50,7 +77,9 @@ def main():
     #Index the file system as it currently exists
     directory = Path("testdir\\migration") #Testing
     index = fs_index(directory)
-    print(index)
+
+    for path in index:
+        too_old(path, 90)
 
     return 0
 
