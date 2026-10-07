@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
-import tkinter as tk
-from tkinter import filedialog
+
+#import tkinter as tk
+#from tkinter import filedialog
 
 #Index the provided file path recursively.
 def fs_index(directory: str) -> list:
@@ -10,7 +11,13 @@ def fs_index(directory: str) -> list:
     if os.path.exists(directory):
         print(f"Good to go, path \"{directory}\" exists.")
 
-    return 0
+    folders = [p for p in directory.rglob("*") if p.is_dir()]
+
+    print("Current folder structure:\n")
+    for folder in folders:
+        print(folder)
+
+    return folders
 
 def main():
     print("This is the main function of this script.")
@@ -22,7 +29,7 @@ def main():
     #directory = filedialog.askdirectory()
 
     #Index the file system as it currently exists
-    directory = Path("testdir") #Testing
+    directory = Path("testdir\\migration") #Testing
     fs_index(directory)
 
     return 0
