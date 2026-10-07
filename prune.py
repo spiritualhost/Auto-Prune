@@ -1,6 +1,7 @@
 import os
 import logging
 from pathlib import Path
+from tqdm import tqdm
 
 #import tkinter as tk
 #from tkinter import filedialog
@@ -21,10 +22,11 @@ def fs_index(directory: str) -> list:
     if not os.path.exists(directory):
         logging.exception("Provided directory does not exist. Exiting.")
         os._exit(1)
-    
-    folders = [p for p in directory.rglob("*") if p.is_dir()]
 
-    print("Current folder structure:\n")
+    #Comprehend a list of all directories under the head
+    folders = [p for p in tqdm(directory.rglob("*")) if p.is_dir()]
+
+    print("Current folder structure:")
     for folder in folders:
         print(folder)
 
