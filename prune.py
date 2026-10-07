@@ -1,16 +1,27 @@
 import os
+import logging
 from pathlib import Path
 
 #import tkinter as tk
 #from tkinter import filedialog
 
+#Logging set up
+logging.basicConfig(
+    filename="app.log",
+    filemode="w",
+    level=logging.INFO, #Set minimum logging threshold to INFO
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
 #Index the provided file path recursively.
 def fs_index(directory: str) -> list:
 
     #Check if directory exists
-    if os.path.exists(directory):
-        print(f"Good to go, path \"{directory}\" exists.")
-
+    if not os.path.exists(directory):
+        logging.exception("Provided directory does not exist. Exiting.")
+        os._exit(1)
+    
     folders = [p for p in directory.rglob("*") if p.is_dir()]
 
     print("Current folder structure:\n")
@@ -20,7 +31,8 @@ def fs_index(directory: str) -> list:
     return folders
 
 def main():
-    print("This is the main function of this script.")
+    #Log beginning of script runtime
+    logging.info("Began auto-prune.")
 
     #Check if the config.toml file exists
 
