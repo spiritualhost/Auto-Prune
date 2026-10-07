@@ -26,7 +26,7 @@ def fs_index(directory: str) -> list:
         os._exit(1)
 
     #Comprehend a list of all directories under the head
-    #NB - tqdm will count all items considered prior to the filter and won't match the final item count
+    #tqdm will count all items considered prior to the filter and won't match the final item count
     folders = [p for p in tqdm(directory.rglob("*")) if p.is_dir()]
 
     print("Current folder structure:")
