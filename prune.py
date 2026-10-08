@@ -1,8 +1,10 @@
 import os
 import logging
+import tomllib
 from pathlib import Path
 from datetime import datetime
 from tqdm import tqdm
+import tomli_w
 
 #import tkinter as tk
 #from tkinter import filedialog
@@ -18,6 +20,12 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
+
+#Make a config file
+def make_config():
+    lines = ["[settings]\n"]
+    with open("config.toml", "w", encoding="utf-8") as f:
+        f.writelines(lines)
 
 #Index the provided file path recursively.
 def fs_index(directory: str) -> list:
@@ -59,8 +67,7 @@ def too_old(path: Path, threshold: int) -> bool:
         print(f"Test ~~ Deleting folder {path}")
         logging.info("Folder older than threshold.")
         return True
-    else:
-        return False
+    return False
 
 def main():
     #Log beginning of script runtime
@@ -69,6 +76,42 @@ def main():
     #Check if the config.toml file exists
     if not os.path.exists("config.toml"):
         logging.warning("No config file exists. Creating new config file.")
+        make_config()
+
+    #Load and parse the config file
+    config_path = Path("config.toml")
+    with open(config_path, "rb") as f:
+        config = tomllib.load(f)
+
+    #Check if threshold value present
+    if "threshold" not in config:
+        days_input = input("Enter a threshold for deletion in days: ").strip()
+
+        while True:
+            try:
+                threshold = int(days_input)
+                
+                #Disallow negatives
+                if threshold <= 0:
+                    raise ValueError("Negative numbers are not allowed.")
+                
+                print(f"You have selected {threshold} days as your threshold.")
+                break
+            
+            except ValueError:
+                print("Invalid entry, please try again.")
+                days_input = input("Enter a threshold for deletion in days: ").strip()
+
+        config["settings"]["threshold"] = threshold
+
+
+
+
+    #Write to config
+    with open(config_path, "wb") as f:
+        tomli_w.dump(config, f)
+
+    #print(config["settings"]["threshold"])
 
     #Check if the config.toml file has a path in it already
     #If not, open filedialog to allow the user to select a path
