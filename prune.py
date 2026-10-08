@@ -39,10 +39,6 @@ def fs_index(directory: str) -> list:
     #tqdm will count all items considered prior to the filter and won't match the final item count
     folders = [p for p in tqdm(directory.rglob("*")) if p.is_dir()]
 
-    print("Current folder structure:")
-    for folder in folders:
-        print(folder)
-
     logging.info("Succcessful index -- returning pathlist.")
 
     return folders
@@ -81,7 +77,8 @@ def main():
     with open(config_path, "rb") as f:
         config = tomllib.load(f)
 
-    #Creates settings table if missing and returns it
+    #Creates settings table if missing and returns it; add flag
+    changed = False
     settings = config.setdefault("settings", {})
 
     #Check if threshold value present
@@ -97,6 +94,7 @@ def main():
                     raise ValueError("Must be a positive number.")
                           
                 print(f"You have selected {threshold} days as your threshold.")
+                changed = True
                 break
             
             except ValueError:
@@ -114,16 +112,18 @@ def main():
             if len(directory) == 0:
                 continue
 
+            changed = True
             break
 
         settings["directory"] = directory
 
     #Write to config
-    with open(config_path, "wb") as f:
-        tomli_w.dump(config, f)
+    if changed:
+        with open(config_path, "wb") as f:
+            tomli_w.dump(config, f)
 
     #Index the file system as it currently exists
-    directory = Path("testdir\\migration") #Testing
+    directory = Path(config["settings"]["directory"]) 
     index = fs_index(directory)
 
     for path in index:
