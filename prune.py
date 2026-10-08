@@ -3,11 +3,9 @@ import logging
 import tomllib
 from pathlib import Path
 from datetime import datetime
+from tkinter import filedialog
 from tqdm import tqdm
 import tomli_w
-
-#import tkinter as tk
-#from tkinter import filedialog
 
 #Set global variables
 date_today = datetime.now()
@@ -83,18 +81,21 @@ def main():
     with open(config_path, "rb") as f:
         config = tomllib.load(f)
 
+    #Creates settings table if missing and returns it
+    settings = config.setdefault("settings", {})
+
     #Check if threshold value present
-    if "threshold" not in config:
+    if "threshold" not in settings:
         days_input = input("Enter a threshold for deletion in days: ").strip()
 
         while True:
             try:
                 threshold = int(days_input)
-                
+              
                 #Disallow negatives
                 if threshold <= 0:
-                    raise ValueError("Negative numbers are not allowed.")
-                
+                    raise ValueError("Must be a positive number.")
+                          
                 print(f"You have selected {threshold} days as your threshold.")
                 break
             
@@ -102,20 +103,24 @@ def main():
                 print("Invalid entry, please try again.")
                 days_input = input("Enter a threshold for deletion in days: ").strip()
 
-        config["settings"]["threshold"] = threshold
+        settings["threshold"] = threshold
 
+    #Check if a directory value is present
+    if "directory" not in settings:
 
+        while True:
+            directory = filedialog.askdirectory()
 
+            if len(directory) == 0:
+                continue
+
+            break
+
+        settings["directory"] = directory
 
     #Write to config
     with open(config_path, "wb") as f:
         tomli_w.dump(config, f)
-
-    #print(config["settings"]["threshold"])
-
-    #Check if the config.toml file has a path in it already
-    #If not, open filedialog to allow the user to select a path
-    #directory = filedialog.askdirectory()
 
     #Index the file system as it currently exists
     directory = Path("testdir\\migration") #Testing
