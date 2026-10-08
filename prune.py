@@ -2,6 +2,7 @@ import os
 import logging
 import tomllib
 import argparse
+import json
 from pathlib import Path
 from datetime import datetime
 from tkinter import filedialog
@@ -134,6 +135,14 @@ def main():
     #Index the file system as it currently exists
     directory = Path(config["settings"]["directory"]) 
     index = fs_index(directory)
+
+    #Dictionarify the index
+    index_dict = {str(folder): False for folder in index}
+
+    #Dump dictionarified index into json file
+    logging.info("Writing dictionarified index to json file.")
+    with open("index.json", "w") as f:
+        json.dump(index_dict, f, indent=4)
 
     #Check folders against threshold
     threshold = config["settings"]["threshold"]
