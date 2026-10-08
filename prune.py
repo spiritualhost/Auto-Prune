@@ -1,6 +1,7 @@
 import os
 import logging
 import tomllib
+import argparse
 from pathlib import Path
 from datetime import datetime
 from tkinter import filedialog
@@ -18,6 +19,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
+
+#Add argparse setup for cmd line flags
+parser = argparse.ArgumentParser()
+parser.add_argument("-t", "--test", help="run the program in test mode",
+                    action="store_true")
+args = parser.parse_args()
+if args.test:
+    print("Running in test mode.")
 
 #Make a config file
 def make_config():
@@ -126,8 +135,10 @@ def main():
     directory = Path(config["settings"]["directory"]) 
     index = fs_index(directory)
 
+    #Check folders against threshold
+    threshold = config["settings"]["threshold"]
     for path in index:
-        too_old(path, 90)
+        too_old(path, threshold)
 
     return 0
 
