@@ -27,6 +27,8 @@ parser.add_argument("-t", "--test", help="run the program in test mode",
                     action="store_true")
 parser.add_argument("-c", "--configure", help="configure the folder pruning",
                     action="store_true")
+parser.add_argument("-r", "--reset", help="reset user preferences file",
+                    action="store_true")
 args = parser.parse_args()
 if args.test:
     print("Running in test mode.")
@@ -142,6 +144,16 @@ def main():
 
     #Dictionarify the index (default to not prune: False)
     index_dict = {str(folder): False for folder in index}
+
+    #If user wants to reset user preferences (-r | --reset)
+    if args.reset == True:
+        try:
+            os.remove("index.json")
+            logging.info("Removed old index.")
+        except FileNotFoundError:
+            logging.error("File 'index.json' not found. No file deleted.")
+        except PermissionError:
+            logging.error("You do not have permission to delete 'index.json'.")
 
     #Compare the new index to the previous index if it exists
     if os.path.exists("index.json"):
