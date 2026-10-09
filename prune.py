@@ -25,9 +25,13 @@ logging.basicConfig(
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--test", help="run the program in test mode",
                     action="store_true")
+parser.add_argument("-c", "--configure", help="configure the folder pruning",
+                    action="store_true")
 args = parser.parse_args()
 if args.test:
     print("Running in test mode.")
+elif args.configure:
+    print("Running in configuration mode.")
 
 #Make a config file
 def make_config():
@@ -143,6 +147,14 @@ def main():
     logging.info("Writing dictionarified index to json file.")
     with open("index.json", "w") as f:
         json.dump(index_dict, f, indent=4)
+
+    #Everything below here controlled with the command line flags
+
+    #If running in test mode, find all the applicable files and write to the log
+
+    #If running in configuration mode, questionary for checking remove files
+
+    #Else: just run through and prune automatically
 
     #Check folders against threshold
     threshold = config["settings"]["threshold"]
