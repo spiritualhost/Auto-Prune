@@ -140,8 +140,20 @@ def main():
     directory = Path(config["settings"]["directory"]) 
     index = fs_index(directory)
 
-    #Dictionarify the index
+    #Dictionarify the index (default to not prune: False)
     index_dict = {str(folder): False for folder in index}
+
+    #Compare the new index to the previous index if it exists
+    if os.path.exists("index.json"):
+        with open("index.json", "r") as file:
+            previous_index = json.load(file)
+        
+        for key, value in previous_index.items():
+            #If there is a matching key in both dictionaries
+            #And the previous dictionary was already set to True
+            #Change the new key's value to True before dumping to file (maintains preferences)
+            if value is True and key in index_dict:
+                index_dict[key] = True 
 
     #Dump dictionarified index into json file
     logging.info("Writing dictionarified index to json file.")
