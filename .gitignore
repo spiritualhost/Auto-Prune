@@ -1,4 +1,6 @@
+build/
 testdir/
 config.toml
 app.log
 index.json
+*.spec
