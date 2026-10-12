@@ -110,6 +110,11 @@ def too_old(path: Path, threshold: int) -> bool:
         return True
     return False
 
+#Check if folder is empty
+def empty(path: Path) -> bool:
+    #Returns True if the path is empty, even of subfolders, False otherwise
+    return not any(path.iterdir())
+
 def main():
     #Log beginning of script runtime
     logging.info("Beginning auto-prune.")
@@ -214,7 +219,7 @@ def main():
         index = json.load(file)
 
     for path in index:
-        if too_old(Path(path), threshold):
+        if too_old(Path(path), threshold) and empty(Path(path)) and index[path] == True:
             if args.test is True:
                 logging.info(f"Test Mode -- folder {path} is too old and will be deleted.")
             else:
