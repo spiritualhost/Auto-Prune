@@ -63,7 +63,6 @@ def configure():
             json.dump(loaded_index, f, indent=4)
         
         logging.info("Successful configuration. Exiting.")
-        os._exit(0)
 
     except FileNotFoundError:
         logging.critical("Index file not found for configuration.")
