@@ -9,5 +9,5 @@ The auto-pruner uses a config file called `config.toml` to hold settings. This a
 Compile the script into an executable with pyinstaller:
 
 ```powershell
-pyinstaller --onefile prune.py
+pyinstaller --onefile --icon=assets\bonsai.ico prune.py
 ```

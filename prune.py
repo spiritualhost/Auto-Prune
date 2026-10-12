@@ -223,7 +223,7 @@ def main():
                 logging.info("Test Mode -- folder %s is too old and will be deleted.", path)
             else:
                 try:
-                    os.remove(path)
+                    os.rmdir(path)
                     logging.info("Pruned %s", path)
                 except FileNotFoundError:
                     logging.info("File not found error for folder %s", path)
