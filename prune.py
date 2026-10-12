@@ -8,6 +8,8 @@ from datetime import datetime
 from tkinter import filedialog
 from tqdm import tqdm
 import tomli_w
+import questionary
+from questionary import Choice
 
 #Set global variables
 date_today = datetime.now()
@@ -32,14 +34,34 @@ parser.add_argument("-r", "--reset", help="reset user preferences file",
 args = parser.parse_args()
 if args.test:
     print("Running in test mode.")
-elif args.configure:
-    print("Running in configuration mode.")
 
 #Make a config file
 def make_config():
     lines = ["[settings]\n"]
     with open("config.toml", "w", encoding="utf-8") as f:
         f.writelines(lines)
+
+#User configuration of pruning
+def configure():
+    print("Entering configuration mode.")
+    try:
+        with open("index.json", "r") as f:
+            loaded_index = json.load(f)
+
+        choices = [Choice(str(key), checked=value) for key, value in loaded_index.items()]
+
+        #print(choices)
+
+        pruned_paths = questionary.checkbox(
+            "Which folder paths should be pruned?",
+            choices=choices
+        ).ask()
+
+        os._exit(0)
+
+    except FileNotFoundError:
+        logging.critical("Index file not found for configuration.")
+        os._exit(1)
 
 #Index the provided file path recursively.
 def fs_index(directory: str) -> list:
@@ -172,11 +194,11 @@ def main():
     with open("index.json", "w") as f:
         json.dump(index_dict, f, indent=4)
 
-    #Everything below here controlled with the command line flags
+    #If running in configuration mode (-c | --configure)
+    if args.configure:
+        configure()
 
     #If running in test mode, find all the applicable files and write to the log
-
-    #If running in configuration mode, questionary for checking remove files
 
     #Else: just run through and prune automatically
 
