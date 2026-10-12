@@ -41,7 +41,7 @@ def make_config():
 
 #User configuration of pruning
 def configure():
-    print("Entering configuration mode.")
+    logging.info("Entering configuration mode.")
     try:
         with open("index.json", "r", encoding="utf-8") as f:
             loaded_index = json.load(f)
@@ -61,7 +61,8 @@ def configure():
 
         with open("index.json", "w", encoding="utf-8") as f:
             json.dump(loaded_index, f, indent=4)
-
+        
+        logging.info("Successful configuration. Exiting.")
         os._exit(0)
 
     except FileNotFoundError:
@@ -105,7 +106,6 @@ def too_old(path: Path, threshold: int) -> bool:
     difference = (date_today - modification_date).days
 
     if difference >= threshold:
-        print(f"Test ~~ Deleting folder {path}")
         logging.info("Folder older than threshold.")
         return True
     return False
@@ -203,18 +203,30 @@ def main():
     with open("index.json", "w", encoding="utf-8") as f:
         json.dump(index_dict, f, indent=4)
 
+    #Command line flags determine branching paths here
     #If running in configuration mode (-c | --configure), then exit
     if args.configure is True:
         configure()
 
-    #If running in test mode, find all the applicable files and write to the log
-
-    #Else: just run through and prune automatically
-
     #Check folders against threshold
     threshold = config["settings"]["threshold"]
+    with open("index.json", "r", encoding="utf-8") as file:
+        index = json.load(file)
+
     for path in index:
-        too_old(path, threshold)
+        if too_old(Path(path), threshold):
+            if args.test is True:
+                logging.info(f"Test Mode -- folder {path} is too old and will be deleted.")
+            else:
+                try:
+                    os.path.remove(path)
+                    logging.info("Pruned %s", path)
+                except FileNotFoundError:
+                    logging.info("File not found error for folder %s", path)
+                except PermissionError:
+                    logging.info("Permissions denied to delete folder %s", path)
+
+    logging.info("Successful prune!")
 
     return 0
 
