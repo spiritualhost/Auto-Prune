@@ -1,2 +1,2 @@
 [tool.pylint.messages_control]
-disable = ["missing-module-docstring", "missing-function-docstring", "trailing-whitespace"]
+disable = ["missing-module-docstring", "missing-function-docstring", "trailing-whitespace", "too-many-branches", "too-many-statements"]

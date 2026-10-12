@@ -11,7 +11,6 @@ import tomli_w
 from InquirerPy import inquirer
 from InquirerPy.base import Choice
 
-
 #Set global variables
 date_today = datetime.now()
 
@@ -33,8 +32,6 @@ parser.add_argument("-c", "--configure", help="configure the folder pruning",
 parser.add_argument("-r", "--reset", help="reset user preferences file",
                     action="store_true")
 args = parser.parse_args()
-if args.test:
-    print("Running in test mode.")
 
 #Make a config file
 def make_config():
@@ -46,7 +43,7 @@ def make_config():
 def configure():
     print("Entering configuration mode.")
     try:
-        with open("index.json", "r") as f:
+        with open("index.json", "r", encoding="utf-8") as f:
             loaded_index = json.load(f)
 
         choices = [Choice(value=str(key), enabled=value) for key, value in loaded_index.items()]
@@ -62,7 +59,7 @@ def configure():
         for path in pruned_paths:
             loaded_index[path] = True
 
-        with open("index.json", "w") as f:
+        with open("index.json", "w", encoding="utf-8") as f:
             json.dump(loaded_index, f, indent=4)
 
         os._exit(0)
@@ -180,7 +177,7 @@ def main():
     index_dict = {str(folder): False for folder in index}
 
     #If user wants to reset user preferences (-r | --reset)
-    if args.reset == True:
+    if args.reset is True:
         try:
             os.remove("index.json")
             logging.info("Removed old index.")
@@ -191,7 +188,7 @@ def main():
 
     #Compare the new index to the previous index if it exists
     if os.path.exists("index.json"):
-        with open("index.json", "r") as file:
+        with open("index.json", "r", encoding="utf-8") as file:
             previous_index = json.load(file)
         
         for key, value in previous_index.items():
@@ -203,11 +200,11 @@ def main():
 
     #Dump dictionarified index into json file
     logging.info("Writing dictionarified index to json file.")
-    with open("index.json", "w") as f:
+    with open("index.json", "w", encoding="utf-8") as f:
         json.dump(index_dict, f, indent=4)
 
     #If running in configuration mode (-c | --configure), then exit
-    if args.configure:
+    if args.configure is True:
         configure()
 
     #If running in test mode, find all the applicable files and write to the log
