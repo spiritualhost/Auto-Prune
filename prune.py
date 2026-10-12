@@ -219,12 +219,12 @@ def main():
         index = json.load(file)
 
     for path in index:
-        if too_old(Path(path), threshold) and empty(Path(path)) and index[path] == True:
+        if too_old(Path(path), threshold) and empty(Path(path)) and index[path] is True:
             if args.test is True:
-                logging.info(f"Test Mode -- folder {path} is too old and will be deleted.")
+                logging.info("Test Mode -- folder %s is too old and will be deleted.", path)
             else:
                 try:
-                    os.path.remove(path)
+                    os.remove(path)
                     logging.info("Pruned %s", path)
                 except FileNotFoundError:
                     logging.info("File not found error for folder %s", path)
