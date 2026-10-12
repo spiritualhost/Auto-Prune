@@ -8,8 +8,9 @@ from datetime import datetime
 from tkinter import filedialog
 from tqdm import tqdm
 import tomli_w
-import questionary
-from questionary import Choice
+from InquirerPy import inquirer
+from InquirerPy.base import Choice
+
 
 #Set global variables
 date_today = datetime.now()
@@ -48,19 +49,30 @@ def configure():
         with open("index.json", "r") as f:
             loaded_index = json.load(f)
 
-        choices = [Choice(str(key), checked=value) for key, value in loaded_index.items()]
+        choices = [Choice(value=str(key), enabled=value) for key, value in loaded_index.items()]
 
-        #print(choices)
+        #Allow the user to fuzzy search through index and select folders to prune
+        pruned_paths = inquirer.fuzzy(
+            message="Select multiple items (Type to filter, Tab to toggle, Enter to submit):",
+            choices=choices,
+            multiselect=True
+        ).execute()
 
-        pruned_paths = questionary.checkbox(
-            "Which folder paths should be pruned?",
-            choices=choices
-        ).ask()
+        #Apply the configurations
+        for path in pruned_paths:
+            loaded_index[path] = True
+
+        with open("index.json", "w") as f:
+            json.dump(loaded_index, f, indent=4)
 
         os._exit(0)
 
     except FileNotFoundError:
         logging.critical("Index file not found for configuration.")
+        os._exit(1)
+
+    except PermissionError:
+        logging.critical("You do not have permissions to access the index file.")
         os._exit(1)
 
 #Index the provided file path recursively.
@@ -194,7 +206,7 @@ def main():
     with open("index.json", "w") as f:
         json.dump(index_dict, f, indent=4)
 
-    #If running in configuration mode (-c | --configure)
+    #If running in configuration mode (-c | --configure), then exit
     if args.configure:
         configure()
 
