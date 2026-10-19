@@ -6,6 +6,15 @@ The auto-pruner uses a config file called `config.toml` to hold settings. This a
 
 The script will automatically index the directory on every run to ensure the most up-to-date structure is in use. The script defaults to False for each directory, meaning it won't delete them unless that value is adjusted to True. This can be done in the `index.json` file.
 
+To expedite installation on a Windows system, run the `setup.ps1` script an Administrator:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\setup.ps1
+```
+
+This will create a directory in Program Files, send a shortcut to the desktop, and create a Task Scheduler task to make the program run automatically at 8 AM daily.
+
 ## Execution
 
 Command line options:
