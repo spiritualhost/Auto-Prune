@@ -39,7 +39,7 @@ The executable can be run from anywhere the first time, as it will spawn the nec
 
 ## Compilation
 
-Compile the script into an executable with pyinstaller:
+Compile the script into an executable with pyinstaller from within a .venv:
 
 ```powershell
 pyinstaller --onefile --uac-admin --icon=assets\bonsai.ico prune.py
