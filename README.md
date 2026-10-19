@@ -42,5 +42,5 @@ The executable can be run from anywhere the first time, as it will spawn the nec
 Compile the script into an executable with pyinstaller:
 
 ```powershell
-pyinstaller --onefile --icon=assets\bonsai.ico prune.py
+pyinstaller --onefile --uac-admin --icon=assets\bonsai.ico prune.py
 ```
