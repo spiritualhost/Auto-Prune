@@ -14,7 +14,7 @@ Copy-Item -Path $application -Destination "$destinationDir"
 #Create shortcut on the desktop
 Write-Output "Creating desktop shortcut..."
 $shell = New-Object -ComObject WScript.Shell
-$shortcut = $shell.CreateShortcut("$env:USERPROFILE\Desktop\shortcut.lnk")
+$shortcut = $shell.CreateShortcut("$env:USERPROFILE\Desktop\prune.lnk")
 $shortcut.TargetPath = "$destinationDir\prune.exe"
 $shortcut.WorkingDirectory = "$destinationDir"
 $shortcut.Save()
@@ -34,3 +34,7 @@ Register-ScheduledTask `
     -Trigger $Trigger `
     -Principal $Principal `
     -Description "Automatically prune from user-selected directory."
+
+Write-Output "Auto-Prune installed successfully!"
+Write-Host "Press any key to continue..." -NoNewline
+$null = [Console]::ReadKey($true)

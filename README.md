@@ -15,6 +15,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 This will create a directory in Program Files, send a shortcut to the desktop, and create a Task Scheduler task to make the program run automatically at 8 AM daily.
 
+**NB - The script should be run once before relying on the automatic schedule so it can be configured. If you don't do this, the script might hang.**
+
 ## Execution
 
 Command line options:
@@ -43,4 +45,13 @@ Compile the script into an executable with pyinstaller from within a .venv:
 
 ```powershell
 pyinstaller --onefile --uac-admin --icon=assets\bonsai.ico prune.py
+```
+
+## Removal
+
+To remove the pruner from a Windows system, run the `remove.ps1` script an Administrator:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\remove.ps1
 ```
