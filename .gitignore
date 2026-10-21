@@ -3,5 +3,6 @@ testdir/
 config.toml
 app.log
 index.json
+settings.json
 *.spec
 *.db

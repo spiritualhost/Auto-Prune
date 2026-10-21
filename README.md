@@ -41,7 +41,13 @@ The executable can be run from anywhere the first time, as it will spawn the nec
 
 ## Compilation
 
-Compile the script into an executable with pyinstaller from within a .venv:
+Create a `.venv` and install the requirements from the `requirements.txt` file with:
+
+```powershell
+pip install -r .\requirements.txt
+```
+
+Compile the script into an executable with pyinstaller from within the .venv:
 
 ```powershell
 pyinstaller --onefile --uac-admin --icon=assets\bonsai.ico prune.py
