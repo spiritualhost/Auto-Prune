@@ -4,3 +4,4 @@ config.toml
 app.log
 index.json
 *.spec
+*.db
