@@ -11,6 +11,11 @@ Write-Output "Installing application..."
 $application = "dist\prune.exe"
 Copy-Item -Path $application -Destination "$destinationDir"
 
+#Move README to program folder
+Write-Output "Copying README..."
+$readme = ".\README.md"
+Copy-Item -Path $readme -Destination "$destinationDir"
+
 #Create shortcut on the desktop
 Write-Output "Creating desktop shortcut..."
 $shell = New-Object -ComObject WScript.Shell
