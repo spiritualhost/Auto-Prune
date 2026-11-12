@@ -3,6 +3,7 @@ import logging
 import tomllib
 import argparse
 import json
+import shutil
 from pathlib import Path
 from datetime import datetime
 from tkinter import filedialog
@@ -15,6 +16,17 @@ from InquirerPy.base import Choice
 date_today = datetime.now()
 
 #Logging set up
+#Check if a previous log file exists -- archive old log
+if os.path.exists("app.log"):
+    destination = f"logs/app-{date_today.strftime('%Y-%m-%d')}.log"
+
+    #Create the logging folder if it doesn't exist
+    os.makedirs(os.path.dirname(destination), exist_ok=True)
+    
+    #Move the archival log
+    shutil.move("app.log", destination)
+
+#Set up logging config
 logging.basicConfig(
     filename="app.log",
     filemode="w",
