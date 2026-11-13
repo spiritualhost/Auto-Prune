@@ -5,7 +5,7 @@ import argparse
 import json
 import shutil
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from tkinter import filedialog
 from tqdm import tqdm
 import tomli_w
@@ -18,7 +18,8 @@ date_today = datetime.now()
 #Logging set up
 #Check if a previous log file exists -- archive old log
 if os.path.exists("app.log"):
-    destination = f"logs/app-{date_today.strftime('%Y-%m-%d')}.log"
+    yesterday = date_today - timedelta(days=1)
+    destination = f"logs/app-{yesterday.strftime('%Y-%m-%d')}.log"
 
     #Create the logging folder if it doesn't exist
     os.makedirs(os.path.dirname(destination), exist_ok=True)
