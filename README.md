@@ -33,7 +33,7 @@ options:
 
 The test flag will only write to the log, but is a good way of seeing how user preferences will impact an actual run.
 
-The configure flag will allow the user to select or deselect specific folders for pruning. This can also be done manually by changing the values to "true" or false" in the `index.json` after the first run.
+The configure flag will allow the user to select or deselect specific folders for pruning. From most terminals, items selected will become a different color and will have a check symbol next to them. Selection can be done with `tab`. To find a specfic folder, type its name. `Enter` will submit all choices and output a list of all ready for deletion from the entire index. This can also be done manually by changing the values to "true" or false" in the `index.json` after the first run. Setting to `true` will open the folder to deletion.
 
 The reset flag will remove all old user preferences from the `index.json` for a fresh run.
 
